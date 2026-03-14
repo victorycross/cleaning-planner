@@ -1,13 +1,25 @@
-import { Printer } from 'lucide-react'
+import { useState } from 'react'
+import { Printer, Download, FileText, Copy, Check } from 'lucide-react'
 import { format } from 'date-fns'
 import { type AppData, FREQUENCY_LABELS } from '../lib/types'
 import { getNextDue, getDueStatus, sortByDue } from '../lib/scheduler'
+import { exportICS, exportCSV, exportText } from '../lib/export'
 
 interface Props {
   data: AppData
 }
 
 export default function Print({ data }: Props) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    const text = exportText(data)
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
   const allTasks = sortByDue(data.tasks)
 
   const byRoom = data.rooms.map(room => ({
@@ -30,17 +42,71 @@ export default function Print({ data }: Props) {
   return (
     <div className="p-8 max-w-3xl">
       {/* Screen header */}
-      <div className="no-print flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-2xl font-semibold text-text-primary">Print / PDF</h1>
-          <p className="text-sm text-text-muted mt-1">Print this page or use browser Save as PDF</p>
+      <div className="no-print mb-8">
+        <h1 className="text-2xl font-semibold text-text-primary mb-6">Print &amp; Export</h1>
+
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          {/* Print */}
+          <button
+            onClick={() => window.print()}
+            className="flex items-center gap-3 p-4 bg-surface-2 border border-border hover:border-accent rounded-xl text-left transition-colors group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-surface-3 flex items-center justify-center text-text-secondary group-hover:text-accent transition-colors shrink-0">
+              <Printer size={18} />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-text-primary">Print / Save PDF</p>
+              <p className="text-xs text-text-muted mt-0.5">Full schedule with tick boxes</p>
+            </div>
+          </button>
+
+          {/* CSV */}
+          <button
+            onClick={() => exportCSV(data)}
+            className="flex items-center gap-3 p-4 bg-surface-2 border border-border hover:border-accent rounded-xl text-left transition-colors group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-surface-3 flex items-center justify-center text-text-secondary group-hover:text-accent transition-colors shrink-0">
+              <Download size={18} />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-text-primary">Export CSV</p>
+              <p className="text-xs text-text-muted mt-0.5">Microsoft To Do · Excel · Google Sheets</p>
+            </div>
+          </button>
+
+          {/* iCalendar */}
+          <button
+            onClick={() => exportICS(data)}
+            className="flex items-center gap-3 p-4 bg-surface-2 border border-border hover:border-accent rounded-xl text-left transition-colors group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-surface-3 flex items-center justify-center text-text-secondary group-hover:text-accent transition-colors shrink-0">
+              <FileText size={18} />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-text-primary">Export Calendar (.ics)</p>
+              <p className="text-xs text-text-muted mt-0.5">Google Calendar · Outlook · Apple Calendar</p>
+            </div>
+          </button>
+
+          {/* Copy text */}
+          <button
+            onClick={handleCopy}
+            className="flex items-center gap-3 p-4 bg-surface-2 border border-border hover:border-accent rounded-xl text-left transition-colors group"
+          >
+            <div className="w-9 h-9 rounded-lg bg-surface-3 flex items-center justify-center text-text-secondary group-hover:text-accent transition-colors shrink-0">
+              {copied ? <Check size={18} className="text-accent" /> : <Copy size={18} />}
+            </div>
+            <div>
+              <p className="text-sm font-medium text-text-primary">{copied ? 'Copied!' : 'Copy as text'}</p>
+              <p className="text-xs text-text-muted mt-0.5">Paste into any app or message</p>
+            </div>
+          </button>
         </div>
-        <button
-          onClick={() => window.print()}
-          className="flex items-center gap-2 px-4 py-2 bg-accent text-surface font-medium rounded-lg hover:bg-accent/90 transition-colors text-sm"
-        >
-          <Printer size={16} /> Print / Save PDF
-        </button>
+
+        <p className="text-xs text-text-muted">
+          CSV imports into Microsoft To Do via <span className="text-text-secondary">Settings → Import</span>.
+          The .ics file adds recurring reminders to your calendar app.
+        </p>
       </div>
 
       {/* Print content — visible on screen and in print */}
