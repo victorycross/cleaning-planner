@@ -1,6 +1,6 @@
-import { CheckSquare, LayoutGrid, Users, Calendar, Printer } from 'lucide-react'
+import { CheckSquare, LayoutGrid, Users, Calendar, Printer, BookOpen } from 'lucide-react'
 
-export type View = 'today' | 'schedule' | 'rooms' | 'people' | 'print'
+export type View = 'today' | 'schedule' | 'rooms' | 'people' | 'library' | 'print'
 
 interface Props {
   current: View
@@ -13,6 +13,7 @@ const NAV: { id: View; label: string; icon: React.ReactNode }[] = [
   { id: 'schedule', label: 'Schedule', icon: <Calendar size={18} /> },
   { id: 'rooms', label: 'Rooms', icon: <LayoutGrid size={18} /> },
   { id: 'people', label: 'People', icon: <Users size={18} /> },
+  { id: 'library', label: 'Task Library', icon: <BookOpen size={18} /> },
   { id: 'print', label: 'Print / PDF', icon: <Printer size={18} /> },
 ]
 

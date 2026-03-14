@@ -4,6 +4,7 @@ import Today from './views/Today'
 import Schedule from './views/Schedule'
 import Rooms from './views/Rooms'
 import People from './views/People'
+import Library from './views/Library'
 import Print from './views/Print'
 import useAppData from './hooks/useAppData'
 import { getDueStatus } from './lib/scheduler'
@@ -57,6 +58,9 @@ export default function App() {
             onAddPerson={addPerson}
             onDeletePerson={deletePerson}
           />
+        )}
+        {view === 'library' && (
+          <Library data={data} onAddTask={addTask} />
         )}
         {view === 'print' && (
           <Print data={data} />
