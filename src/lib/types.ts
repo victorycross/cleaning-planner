@@ -23,10 +23,19 @@ export interface Task {
   createdAt: string
 }
 
+export interface CustomLibraryTask {
+  id: string
+  title: string
+  roomId: string
+  frequency: Frequency
+  notes: string
+}
+
 export interface AppData {
   rooms: Room[]
   people: Person[]
   tasks: Task[]
+  libraryTasks: CustomLibraryTask[]
 }
 
 export const FREQUENCY_LABELS: Record<Frequency, string> = {

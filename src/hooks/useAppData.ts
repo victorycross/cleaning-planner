@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { v4 as uuid } from 'uuid'
 import { loadData, saveData } from '../lib/storage'
-import { type AppData, type Task, type Room, type Person, PERSON_COLOURS } from '../lib/types'
+import { type AppData, type Task, type Room, type Person, type CustomLibraryTask, PERSON_COLOURS } from '../lib/types'
 
 function useAppData() {
   const [data, setData] = useState<AppData>(loadData)
@@ -73,11 +73,23 @@ function useAppData() {
     update(next)
   }, [data, update])
 
+  // Custom library tasks
+  const addLibraryTask = useCallback((task: Omit<CustomLibraryTask, 'id'>) => {
+    const next = { ...data, libraryTasks: [...data.libraryTasks, { ...task, id: uuid() }] }
+    update(next)
+  }, [data, update])
+
+  const deleteLibraryTask = useCallback((id: string) => {
+    const next = { ...data, libraryTasks: data.libraryTasks.filter(t => t.id !== id) }
+    update(next)
+  }, [data, update])
+
   return {
     data,
     addTask, updateTask, deleteTask, completeTask,
     addRoom, updateRoom, deleteRoom,
     addPerson, updatePerson, deletePerson,
+    addLibraryTask, deleteLibraryTask,
   }
 }
 

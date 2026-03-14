@@ -16,6 +16,7 @@ export default function App() {
     addTask, deleteTask, completeTask,
     addRoom, deleteRoom,
     addPerson, deletePerson,
+    addLibraryTask, deleteLibraryTask,
   } = useAppData()
 
   const overdueCnt = data.tasks.filter(t => getDueStatus(t) === 'overdue').length
@@ -60,7 +61,12 @@ export default function App() {
           />
         )}
         {view === 'library' && (
-          <Library data={data} onAddTask={addTask} />
+          <Library
+            data={data}
+            onAddTask={addTask}
+            onAddLibraryTask={addLibraryTask}
+            onDeleteLibraryTask={deleteLibraryTask}
+          />
         )}
         {view === 'print' && (
           <Print data={data} />
