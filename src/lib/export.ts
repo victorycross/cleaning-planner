@@ -1,4 +1,4 @@
-import { format, addDays } from 'date-fns'
+import { addDays, format } from 'date-fns'
 import { type AppData, type Task, FREQUENCY_LABELS } from './types'
 import { getNextDue } from './scheduler'
 
@@ -10,7 +10,7 @@ function getAssignedNames(data: AppData, task: Task): string {
   return data.people.filter(p => task.assignedTo.includes(p.id)).map(p => p.name).join(', ')
 }
 
-// ─── iCalendar (.ics) ────────────────────────────────────────────────────────
+// ─── iCalendar ────────────────────────────────────────────────────────────────
 
 const ICS_FREQ_MAP: Record<string, string> = {
   daily: 'DAILY',
@@ -22,17 +22,13 @@ const ICS_FREQ_MAP: Record<string, string> = {
   yearly: 'YEARLY',
 }
 
-function icsDate(date: Date): string {
-  return format(date, "yyyyMMdd'T'HHmmss'Z'")
-}
-
 function uid(): string {
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}@cleaning-planner`
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}@sparkle`
 }
 
 export function exportICS(data: AppData): void {
-  const now = icsDate(new Date())
-  const lines: string[] = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Cleaning Planner//EN', 'CALSCALE:GREGORIAN']
+  const now = format(new Date(), "yyyyMMdd'T'HHmmss'Z'")
+  const lines: string[] = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Sparkle//EN', 'CALSCALE:GREGORIAN']
 
   for (const task of data.tasks) {
     const due = getNextDue(task)
@@ -60,20 +56,16 @@ export function exportICS(data: AppData): void {
   }
 
   lines.push('END:VCALENDAR')
-  downloadFile('cleaning-planner.ics', lines.join('\r\n'), 'text/calendar')
+  downloadFile('sparkle-tasks.ics', lines.join('\r\n'), 'text/calendar')
 }
 
-// ─── CSV ─────────────────────────────────────────────────────────────────────
+// ─── CSV ──────────────────────────────────────────────────────────────────────
 
 function csvCell(value: string): string {
   if (value.includes(',') || value.includes('"') || value.includes('\n')) {
     return `"${value.replace(/"/g, '""')}"`
   }
   return value
-}
-
-function csvRow(cells: string[]): string {
-  return cells.map(csvCell).join(',')
 }
 
 export function exportCSV(data: AppData): void {
@@ -87,16 +79,14 @@ export function exportCSV(data: AppData): void {
     task.lastCompleted ? format(new Date(task.lastCompleted), 'yyyy-MM-dd') : '',
     task.notes,
   ])
-
-  const csv = [csvRow(headers), ...rows.map(csvRow)].join('\n')
-  downloadFile('cleaning-planner.csv', csv, 'text/csv')
+  const csv = [headers, ...rows].map(row => row.map(csvCell).join(',')).join('\n')
+  downloadFile('sparkle-tasks.csv', csv, 'text/csv')
 }
 
 // ─── Plain text ───────────────────────────────────────────────────────────────
 
 export function exportText(data: AppData): string {
-  const lines: string[] = ['HOME CLEANING PLANNER', `Generated ${format(new Date(), 'MMMM d, yyyy')}`, '']
-
+  const lines: string[] = ['SPARKLE — HOME CLEANING PLANNER', `Generated ${format(new Date(), 'MMMM d, yyyy')}`, '']
   const byRoom = data.rooms
     .map(room => ({ room, tasks: data.tasks.filter(t => t.roomId === room.id) }))
     .filter(g => g.tasks.length > 0)
@@ -111,8 +101,39 @@ export function exportText(data: AppData): string {
     }
     lines.push('')
   }
-
   return lines.join('\n')
+}
+
+// ─── JSON Backup ──────────────────────────────────────────────────────────────
+
+export function exportJSON(data: AppData): void {
+  const content = JSON.stringify(data, null, 2)
+  downloadFile(`sparkle-backup-${format(new Date(), 'yyyy-MM-dd')}.json`, content, 'application/json')
+}
+
+export function importJSON(file: File): Promise<AppData> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = e => {
+      try {
+        const parsed = JSON.parse(e.target?.result as string) as AppData
+        if (!Array.isArray(parsed.tasks) || !Array.isArray(parsed.rooms)) {
+          reject(new Error('Invalid backup file'))
+          return
+        }
+        // ensure migrations
+        if (!parsed.libraryTasks) parsed.libraryTasks = []
+        if (!parsed.completionLog) parsed.completionLog = []
+        if (!parsed.streakData) parsed.streakData = { date: '', count: 0 }
+        if (parsed.onboardingComplete === undefined) parsed.onboardingComplete = true
+        resolve(parsed)
+      } catch {
+        reject(new Error('Could not parse backup file'))
+      }
+    }
+    reader.onerror = () => reject(new Error('Could not read file'))
+    reader.readAsText(file)
+  })
 }
 
 // ─── Util ─────────────────────────────────────────────────────────────────────

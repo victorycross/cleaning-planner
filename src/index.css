@@ -2,38 +2,82 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Light theme (default) ── */
+:root {
+  --surface:     250 249 246;
+  --surface-1:   243 241 236;
+  --surface-2:   232 229 220;
+  --surface-3:   218 214 203;
+  --surface-4:   200 195 182;
+  --border:      218 214 203;
+  --text-primary:   28 27 22;
+  --text-secondary: 88 84 74;
+  --text-muted:    140 136 124;
+  --accent:        22 163 74;
+  --accent-dim:    20 83 45;
+  --danger:       220 38 38;
+  --warning:      217 119 6;
+  --score-green: #16a34a;
+  --score-amber: #d97706;
+  --score-red:   #dc2626;
+}
+
+/* ── Dark theme ── */
+html.dark {
+  --surface:     17 16 14;
+  --surface-1:   24 23 21;
+  --surface-2:   32 31 28;
+  --surface-3:   42 40 36;
+  --surface-4:   52 50 44;
+  --border:      52 50 44;
+  --text-primary:   245 243 237;
+  --text-secondary: 168 163 150;
+  --text-muted:    107 103 92;
+  --accent:        74 222 128;
+  --accent-dim:    22 101 52;
+  --danger:       248 113 113;
+  --warning:      251 191 36;
+  --score-green: #4ade80;
+  --score-amber: #fbbf24;
+  --score-red:   #f87171;
+}
+
 @layer base {
-  * {
-    box-sizing: border-box;
-  }
+  * { box-sizing: border-box; }
 
   body {
     @apply bg-surface text-text-primary font-sans antialiased;
     margin: 0;
   }
 
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    @apply bg-surface-1;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-surface-4 rounded-full;
-  }
+  ::-webkit-scrollbar       { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-surface-3 rounded-full; }
 }
 
 @layer utilities {
-  .no-print {
-    @apply print:hidden;
-  }
+  .no-print { @apply print:hidden; }
 }
 
+/* ── Completion particle animation ── */
+.particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  margin: -3px 0 0 -3px;
+  animation: particle-out 0.55s ease-out forwards;
+}
+
+@keyframes particle-out {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* ── Print ── */
 @media print {
-  body {
-    background: white !important;
-    color: black !important;
-  }
+  body { background: white !important; color: black !important; }
+  .no-print { display: none !important; }
 }

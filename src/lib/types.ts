@@ -31,11 +31,24 @@ export interface CustomLibraryTask {
   notes: string
 }
 
+export interface CompletionEntry {
+  date: string   // 'yyyy-MM-dd'
+  taskId: string
+}
+
+export interface StreakData {
+  date: string   // last completion day 'yyyy-MM-dd'
+  count: number
+}
+
 export interface AppData {
   rooms: Room[]
   people: Person[]
   tasks: Task[]
   libraryTasks: CustomLibraryTask[]
+  completionLog: CompletionEntry[]
+  streakData: StreakData
+  onboardingComplete: boolean
 }
 
 export const FREQUENCY_LABELS: Record<Frequency, string> = {
@@ -71,3 +84,12 @@ export const DEFAULT_ROOMS: Room[] = [
   { id: 'laundry', name: 'Laundry', icon: '🫧' },
   { id: 'outdoor', name: 'Outdoor', icon: '🌿' },
 ]
+
+export const ROOM_ACCENTS: Record<string, { pill: string; glow: string; bar: string }> = {
+  kitchen:  { pill: 'bg-orange-500/10 text-orange-400', glow: 'border-orange-500/20', bar: '#f97316' },
+  bathroom: { pill: 'bg-blue-500/10 text-blue-400',    glow: 'border-blue-500/20',   bar: '#3b82f6' },
+  living:   { pill: 'bg-violet-500/10 text-violet-400', glow: 'border-violet-500/20', bar: '#8b5cf6' },
+  bedroom:  { pill: 'bg-indigo-500/10 text-indigo-400', glow: 'border-indigo-500/20', bar: '#6366f1' },
+  laundry:  { pill: 'bg-teal-500/10 text-teal-400',    glow: 'border-teal-500/20',   bar: '#14b8a6' },
+  outdoor:  { pill: 'bg-green-500/10 text-green-400',  glow: 'border-green-500/20',  bar: '#22c55e' },
+}
