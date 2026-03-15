@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Plus, Trash2 } from 'lucide-react'
-import { type AppData } from '../lib/types'
+import { type AppData, type Task } from '../lib/types'
 import { getDueStatus, sortByDue, getCompletedThisWeek } from '../lib/scheduler'
 import TaskCard from '../components/tasks/TaskCard'
 
@@ -10,9 +10,11 @@ interface Props {
   onDeleteTask: (id: string) => void
   onAddPerson: (name: string) => void
   onDeletePerson: (id: string) => void
+  onEditTask: (id: string, patch: Partial<Task>) => void
+  onFlagTask: (id: string) => void
 }
 
-export default function People({ data, onComplete, onDeleteTask, onAddPerson, onDeletePerson }: Props) {
+export default function People({ data, onComplete, onDeleteTask, onAddPerson, onDeletePerson, onEditTask, onFlagTask }: Props) {
   const [newName, setNewName] = useState('')
   const [adding, setAdding] = useState(false)
 
@@ -132,9 +134,12 @@ export default function People({ data, onComplete, onDeleteTask, onAddPerson, on
                   {tasks.map(task => (
                     <TaskCard key={task.id} task={task}
                       room={data.rooms.find(r => r.id === task.roomId)}
+                      rooms={data.rooms}
                       people={data.people}
                       onComplete={() => onComplete(task.id)}
                       onDelete={() => onDeleteTask(task.id)}
+                      onEdit={patch => onEditTask(task.id, patch)}
+                      onFlag={() => onFlagTask(task.id)}
                       showRoom />
                   ))}
                 </div>
@@ -153,9 +158,12 @@ export default function People({ data, onComplete, onDeleteTask, onAddPerson, on
               {unassigned.map(task => (
                 <TaskCard key={task.id} task={task}
                   room={data.rooms.find(r => r.id === task.roomId)}
+                  rooms={data.rooms}
                   people={data.people}
                   onComplete={() => onComplete(task.id)}
                   onDelete={() => onDeleteTask(task.id)}
+                  onEdit={patch => onEditTask(task.id, patch)}
+                  onFlag={() => onFlagTask(task.id)}
                   showRoom />
               ))}
             </div>

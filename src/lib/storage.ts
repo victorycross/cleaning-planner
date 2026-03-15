@@ -12,6 +12,7 @@ export function loadData(): AppData {
       if (!parsed.completionLog) parsed.completionLog = []
       if (!parsed.streakData) parsed.streakData = { date: '', count: 0 }
       if (parsed.onboardingComplete === undefined) parsed.onboardingComplete = parsed.tasks.length > 0
+      parsed.tasks = parsed.tasks.map(t => ({ flagged: false, ...t }))
       return parsed
     }
   } catch {

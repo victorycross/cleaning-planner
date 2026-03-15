@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Plus } from 'lucide-react'
-import { type AppData, type Frequency, FREQUENCY_LABELS } from '../lib/types'
+import { type AppData, type Task, type Frequency, FREQUENCY_LABELS } from '../lib/types'
 import { sortByDue, getDueStatus, FREQUENCY_OPTIONS } from '../lib/scheduler'
 import TaskCard from '../components/tasks/TaskCard'
 import TaskForm from '../components/tasks/TaskForm'
@@ -10,11 +10,13 @@ interface Props {
   onComplete: (id: string) => void
   onDelete: (id: string) => void
   onAdd: (task: Parameters<typeof TaskForm>[0]['onSave'] extends (t: infer T) => void ? T : never) => void
+  onEdit: (id: string, patch: Partial<Task>) => void
+  onFlag: (id: string) => void
 }
 
 type Filter = 'all' | Frequency | 'overdue'
 
-export default function Schedule({ data, onComplete, onDelete, onAdd }: Props) {
+export default function Schedule({ data, onComplete, onDelete, onAdd, onEdit, onFlag }: Props) {
   const [filter, setFilter] = useState<Filter>('all')
   const [roomFilter, setRoomFilter] = useState<string>('all')
   const [adding, setAdding] = useState(false)
@@ -32,7 +34,7 @@ export default function Schedule({ data, onComplete, onDelete, onAdd }: Props) {
   ]
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-4 md:p-8 max-w-3xl" style={{ paddingBottom: 'calc(6rem + env(safe-area-inset-bottom))' }}>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold text-text-primary">Schedule</h1>
         <button
@@ -105,9 +107,12 @@ export default function Schedule({ data, onComplete, onDelete, onAdd }: Props) {
               key={task.id}
               task={task}
               room={data.rooms.find(r => r.id === task.roomId)}
+              rooms={data.rooms}
               people={data.people}
               onComplete={() => onComplete(task.id)}
               onDelete={() => onDelete(task.id)}
+              onEdit={patch => onEdit(task.id, patch)}
+              onFlag={() => onFlag(task.id)}
               showRoom
             />
           ))}

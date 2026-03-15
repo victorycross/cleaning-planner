@@ -21,6 +21,7 @@ export interface Task {
   lastCompleted: string | null
   notes: string
   createdAt: string
+  flagged?: boolean
 }
 
 export interface CustomLibraryTask {

@@ -8,14 +8,16 @@ interface Props {
   onSave: (task: Omit<Task, 'id' | 'createdAt' | 'lastCompleted'>) => void
   onCancel: () => void
   defaultRoomId?: string
+  initial?: Pick<Task, 'title' | 'roomId' | 'frequency' | 'assignedTo' | 'notes' | 'flagged'>
+  editMode?: boolean
 }
 
-export default function TaskForm({ rooms, people, onSave, onCancel, defaultRoomId }: Props) {
-  const [title, setTitle] = useState('')
-  const [roomId, setRoomId] = useState(defaultRoomId ?? rooms[0]?.id ?? '')
-  const [frequency, setFrequency] = useState<Frequency>('weekly')
-  const [assignedTo, setAssignedTo] = useState<string[]>([])
-  const [notes, setNotes] = useState('')
+export default function TaskForm({ rooms, people, onSave, onCancel, defaultRoomId, initial, editMode }: Props) {
+  const [title, setTitle] = useState(initial?.title ?? '')
+  const [roomId, setRoomId] = useState(initial?.roomId ?? defaultRoomId ?? rooms[0]?.id ?? '')
+  const [frequency, setFrequency] = useState<Frequency>(initial?.frequency ?? 'weekly')
+  const [assignedTo, setAssignedTo] = useState<string[]>(initial?.assignedTo ?? [])
+  const [notes, setNotes] = useState(initial?.notes ?? '')
 
   const togglePerson = (id: string) =>
     setAssignedTo(prev => prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id])
@@ -23,7 +25,7 @@ export default function TaskForm({ rooms, people, onSave, onCancel, defaultRoomI
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!title.trim() || !roomId) return
-    onSave({ title: title.trim(), roomId, frequency, assignedTo, notes: notes.trim() })
+    onSave({ title: title.trim(), roomId, frequency, assignedTo, notes: notes.trim(), flagged: initial?.flagged ?? false })
   }
 
   return (
@@ -79,7 +81,7 @@ export default function TaskForm({ rooms, people, onSave, onCancel, defaultRoomI
                 style={
                   assignedTo.includes(p.id)
                     ? { backgroundColor: `${p.colour}33`, borderColor: p.colour, color: p.colour }
-                    : { backgroundColor: 'transparent', borderColor: '#333', color: '#a3a3a3' }
+                    : { backgroundColor: 'transparent', borderColor: 'rgb(var(--border))', color: 'rgb(var(--text-muted))' }
                 }
               >
                 {p.name}
@@ -109,7 +111,7 @@ export default function TaskForm({ rooms, people, onSave, onCancel, defaultRoomI
           disabled={!title.trim()}
           className="px-4 py-2 text-sm bg-accent text-surface font-medium rounded-lg hover:bg-accent/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
-          Add task
+          {editMode ? 'Save changes' : 'Add task'}
         </button>
       </div>
     </form>

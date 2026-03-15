@@ -23,6 +23,10 @@ function useAppData() {
     update({ ...data, tasks: data.tasks.map(t => t.id === id ? { ...t, ...patch } : t) })
   }, [data, update])
 
+  const flagTask = useCallback((id: string) => {
+    update({ ...data, tasks: data.tasks.map(t => t.id === id ? { ...t, flagged: !t.flagged } : t) })
+  }, [data, update])
+
   const deleteTask = useCallback((id: string) => {
     update({ ...data, tasks: data.tasks.filter(t => t.id !== id) })
   }, [data, update])
@@ -105,13 +109,19 @@ function useAppData() {
     update({ ...data, libraryTasks: data.libraryTasks.filter(t => t.id !== id) })
   }, [data, update])
 
+  const replaceAllData = useCallback((newData: AppData) => {
+    setData(newData)
+    saveData(newData)
+  }, [])
+
   return {
     data,
-    addTask, updateTask, deleteTask, completeTask,
+    addTask, updateTask, flagTask, deleteTask, completeTask,
     quickSetup, markOnboardingComplete,
     addRoom, updateRoom, deleteRoom,
     addPerson, updatePerson, deletePerson,
     addLibraryTask, deleteLibraryTask,
+    replaceAllData,
   }
 }
 
