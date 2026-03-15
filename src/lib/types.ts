@@ -86,10 +86,10 @@ export const DEFAULT_ROOMS: Room[] = [
 ]
 
 export const ROOM_ACCENTS: Record<string, { pill: string; glow: string; bar: string }> = {
-  kitchen:  { pill: 'bg-orange-500/10 text-orange-400', glow: 'border-orange-500/20', bar: '#f97316' },
-  bathroom: { pill: 'bg-blue-500/10 text-blue-400',    glow: 'border-blue-500/20',   bar: '#3b82f6' },
-  living:   { pill: 'bg-violet-500/10 text-violet-400', glow: 'border-violet-500/20', bar: '#8b5cf6' },
-  bedroom:  { pill: 'bg-indigo-500/10 text-indigo-400', glow: 'border-indigo-500/20', bar: '#6366f1' },
-  laundry:  { pill: 'bg-teal-500/10 text-teal-400',    glow: 'border-teal-500/20',   bar: '#14b8a6' },
-  outdoor:  { pill: 'bg-green-500/10 text-green-400',  glow: 'border-green-500/20',  bar: '#22c55e' },
+  kitchen:  { pill: 'bg-orange-100 text-orange-600 dark:bg-orange-500/15 dark:text-orange-400', glow: 'border-orange-200 dark:border-orange-500/25', bar: '#f97316' },
+  bathroom: { pill: 'bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400',            glow: 'border-sky-200 dark:border-sky-500/25',        bar: '#0ea5e9' },
+  living:   { pill: 'bg-violet-100 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400', glow: 'border-violet-200 dark:border-violet-500/25',  bar: '#8b5cf6' },
+  bedroom:  { pill: 'bg-pink-100 text-pink-600 dark:bg-pink-500/15 dark:text-pink-400',         glow: 'border-pink-200 dark:border-pink-500/25',      bar: '#ec4899' },
+  laundry:  { pill: 'bg-teal-100 text-teal-600 dark:bg-teal-500/15 dark:text-teal-400',         glow: 'border-teal-200 dark:border-teal-500/25',      bar: '#14b8a6' },
+  outdoor:  { pill: 'bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400', glow: 'border-emerald-200 dark:border-emerald-500/25', bar: '#10b981' },
 }

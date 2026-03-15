@@ -16,7 +16,7 @@ const THEME_KEY = 'sparkle-theme'
 export default function App() {
   const [view, setView] = useState<View>('today')
   const [theme, setTheme] = useState<'light' | 'dark'>(() =>
-    (localStorage.getItem(THEME_KEY) as 'light' | 'dark') ?? 'dark'
+    (localStorage.getItem(THEME_KEY) as 'light' | 'dark') ?? 'light'
   )
 
   const {

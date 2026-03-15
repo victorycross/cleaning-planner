@@ -4,40 +4,40 @@
 
 /* ── Light theme (default) ── */
 :root {
-  --surface:     250 249 246;
-  --surface-1:   243 241 236;
-  --surface-2:   232 229 220;
-  --surface-3:   218 214 203;
-  --surface-4:   200 195 182;
-  --border:      218 214 203;
-  --text-primary:   28 27 22;
-  --text-secondary: 88 84 74;
-  --text-muted:    140 136 124;
-  --accent:        22 163 74;
-  --accent-dim:    20 83 45;
-  --danger:       220 38 38;
-  --warning:      217 119 6;
-  --score-green: #16a34a;
-  --score-amber: #d97706;
-  --score-red:   #dc2626;
+  --surface:     255 255 255;
+  --surface-1:   248 250 252;
+  --surface-2:   241 245 249;
+  --surface-3:   226 232 240;
+  --surface-4:   203 213 225;
+  --border:      226 232 240;
+  --text-primary:   15 23 42;
+  --text-secondary: 71 85 105;
+  --text-muted:    148 163 184;
+  --accent:        16 185 129;
+  --accent-dim:    6 95 70;
+  --danger:       239 68 68;
+  --warning:      245 158 11;
+  --score-green: #10b981;
+  --score-amber: #f59e0b;
+  --score-red:   #ef4444;
 }
 
 /* ── Dark theme ── */
 html.dark {
-  --surface:     17 16 14;
-  --surface-1:   24 23 21;
-  --surface-2:   32 31 28;
-  --surface-3:   42 40 36;
-  --surface-4:   52 50 44;
-  --border:      52 50 44;
-  --text-primary:   245 243 237;
-  --text-secondary: 168 163 150;
-  --text-muted:    107 103 92;
-  --accent:        74 222 128;
-  --accent-dim:    22 101 52;
+  --surface:     13 13 15;
+  --surface-1:   20 20 24;
+  --surface-2:   28 28 34;
+  --surface-3:   38 38 46;
+  --surface-4:   50 50 60;
+  --border:      50 50 60;
+  --text-primary:   240 240 245;
+  --text-secondary: 156 163 175;
+  --text-muted:    100 110 125;
+  --accent:        52 211 153;
+  --accent-dim:    6 78 59;
   --danger:       248 113 113;
   --warning:      251 191 36;
-  --score-green: #4ade80;
+  --score-green: #34d399;
   --score-amber: #fbbf24;
   --score-red:   #f87171;
 }
@@ -57,6 +57,16 @@ html.dark {
 
 @layer utilities {
   .no-print { @apply print:hidden; }
+
+  /* Card elevation for light mode */
+  .card {
+    @apply bg-surface border border-border rounded-2xl;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  html.dark .card {
+    box-shadow: none;
+  }
 }
 
 /* ── Completion particle animation ── */
