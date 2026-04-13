@@ -58,6 +58,12 @@ html.dark {
 @layer utilities {
   .no-print { @apply print:hidden; }
 
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
   /* Card elevation for light mode */
   .card {
     @apply bg-surface border border-border rounded-2xl;
