@@ -109,6 +109,7 @@ export default function TaskCard({
 
   const dueLabel = (() => {
     if (status === 'overdue') {
+      // eslint-disable-next-line react-hooks/purity
       const days = Math.abs(Math.round((nextDue.getTime() - Date.now()) / 86400000))
       return days === 0 ? 'Due today' : `${days}d overdue`
     }

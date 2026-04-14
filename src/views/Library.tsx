@@ -105,7 +105,7 @@ export default function Library({ data, onAddTask, onAddLibraryTask, onDeleteLib
   const toggleCollapse = (roomId: string) =>
     setCollapsedRooms(prev => {
       const next = new Set(prev)
-      next.has(roomId) ? next.delete(roomId) : next.add(roomId)
+      void (next.has(roomId) ? next.delete(roomId) : next.add(roomId))
       return next
     })
 

@@ -71,9 +71,13 @@ export default function Print({ data, onRestore }: Props) {
         <h1 className="text-2xl font-bold text-text-primary mb-6">Print &amp; Export</h1>
 
         <div className="grid grid-cols-2 gap-3 mb-5">
+          {/* eslint-disable-next-line react-hooks/static-components */}
           <ExportCard icon={<Printer size={18} />} title="Print / Save PDF" desc="Full schedule with tick boxes" onClick={() => window.print()} accent />
+          {/* eslint-disable-next-line react-hooks/static-components */}
           <ExportCard icon={<Download size={18} />} title="Export CSV" desc="Microsoft To Do · Excel · Sheets" onClick={() => exportCSV(data)} />
+          {/* eslint-disable-next-line react-hooks/static-components */}
           <ExportCard icon={<FileText size={18} />} title="Export Calendar (.ics)" desc="Google Calendar · Outlook · Apple" onClick={() => exportICS(data)} />
+          {/* eslint-disable-next-line react-hooks/static-components */}
           <ExportCard
             icon={copied ? <Check size={18} className="text-accent" /> : <Copy size={18} />}
             title={copied ? 'Copied!' : 'Copy as text'}

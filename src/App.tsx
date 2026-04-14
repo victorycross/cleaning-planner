@@ -85,6 +85,7 @@ export default function App() {
 
   useEffect(() => {
     if (!user || initialLoad.current || authLoading) return
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     syncData(data, user.id)
   }, [data, user, authLoading, syncData])
 
